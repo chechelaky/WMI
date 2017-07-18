@@ -1,11 +1,10 @@
 ; #UDF# =========================================================================================================================
-; Description ...: coleta o serial da motherboard
-;                  Em alguns modelos de motherboard pode retornar vazio, não é erro, simplesmente a informação não foi gravada
-;                  logo, não tem número de série
+; Description ...:
 ; Exemplo........:
 ; Author ........: Luigi (Luismar Chechelaky)
-; Link ..........: https://github.com/chechelaky/WMI/CIM_Display.au3
-; Source.........: https://msdn.microsoft.com/en-us/library/aa387258(v=vs.85).aspx
+; Link ..........: https://github.com/chechelaky/WMI/CIM_VideoControllerResolution.au3
+;                  http://stackoverflow.com/questions/7967699/get-screen-resolution-using-wmi-powershell-in-windows-7
+; Source.........: https://msdn.microsoft.com/en-us/library/aa388669(v=vs.85).aspx
 ; AutoIt version.: 3.3.14.2
 ; ===============================================================================================================================
 
@@ -15,12 +14,12 @@ ConsoleWrite(wmi_test() & @LF)
 
 Func wmi_test()
 	Local $objWMIService = ObjGet("WINMGMTS:\\" & @ComputerName & "\ROOT\cimv2")
-	Local $arrName = StringSplit("Availability,Caption,ConfigManagerErrorCode,ConfigManagerUserConfig,CreationClassName,Description,DeviceID,ErrorCleared,ErrorDescription,InstallDate,IsLocked,LastErrorCode,Name,PNPDeviceID,PowerManagementCapabilities,PowerManagementSupported,Status,StatusInfo,SystemCreationClassName,SystemName", ",", 2)
+	Local $arrName = StringSplit("Caption,Description,HorizontalResolution,MaxRefreshRate,MinRefreshRate,NumberOfColors,RefreshRate,ScanMode,SettingID,VerticalResolution", ",", 2)
 
-	Local $colItems = $objWMIService.ExecQuery("SELECT * FROM CIM_Display", "WQL", 0x10 + 0x20)
+	Local $colItems = $objWMIService.ExecQuery("SELECT * FROM CIM_VideoControllerResolution", "WQL", 0x10 + 0x20) ;  Where DeviceID=""DesktopMonitor1""
 	Local $Result = '', $data
 	If IsObj($colItems) Then
-		ConsoleWrite('[CIM_Display]' & @LF)
+		ConsoleWrite('[CIM_VideoControllerResolution]' & @LF)
 		For $objItem In $colItems
 			For $jj = 0 To UBound($arrName) - 1
 				$data = Execute('$objItem.' & $arrName[$jj])
